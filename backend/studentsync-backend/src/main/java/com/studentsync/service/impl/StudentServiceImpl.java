@@ -1,7 +1,8 @@
-package com.studentsync.service;
+package com.studentsync.service.impl;
 
 import com.studentsync.entity.Student;
 import com.studentsync.repository.StudentRepository;
+import com.studentsync.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
