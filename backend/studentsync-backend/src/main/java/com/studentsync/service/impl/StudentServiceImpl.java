@@ -3,7 +3,7 @@ package com.studentsync.service.impl;
 import com.studentsync.entity.Student;
 import com.studentsync.repository.StudentRepository;
 import com.studentsync.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,11 +12,14 @@ import java.util.Optional;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     @Override
-    public Student saveStudent(Student student) {
+    public Student saveStudent(@NonNull Student student) {
         return studentRepository.save(student);
     }
 
@@ -26,12 +29,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> getStudentById(Long id) {
+    public Optional<Student> getStudentById(@NonNull Long id) {
         return studentRepository.findById(id);
     }
 
     @Override
-    public void deleteStudent(Long id) {
+    public void deleteStudent(@NonNull Long id) {
         studentRepository.deleteById(id);
     }
 }
