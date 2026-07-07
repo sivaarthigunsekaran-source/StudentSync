@@ -1,13 +1,14 @@
 package com.studentsync.service.impl;
 
-import com.studentsync.entity.Student;
-import com.studentsync.repository.StudentRepository;
-import com.studentsync.service.StudentService;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.studentsync.entity.Student;
+import com.studentsync.repository.StudentRepository;
+import com.studentsync.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -31,6 +32,18 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Optional<Student> getStudentById(@NonNull Long id) {
         return studentRepository.findById(id);
+    }
+
+    @Override
+    public Student updateStudent(@NonNull Long id, @NonNull Student student) {
+
+        Student existingStudent = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+        existingStudent.setName(student.getName());
+        existingStudent.setEmail(student.getEmail());
+
+        return studentRepository.save(existingStudent);
     }
 
     @Override

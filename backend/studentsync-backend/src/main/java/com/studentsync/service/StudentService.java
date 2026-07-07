@@ -1,10 +1,11 @@
 package com.studentsync.service;
 
-import com.studentsync.entity.Student;
-import org.springframework.lang.NonNull;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.lang.NonNull;
+
+import com.studentsync.entity.Student;
 
 public interface StudentService {
 
@@ -13,6 +14,8 @@ public interface StudentService {
     List<Student> getAllStudents();
 
     Optional<Student> getStudentById(@NonNull Long id);
+
+    Student updateStudent(@NonNull Long id, @NonNull Student student);
 
     void deleteStudent(@NonNull Long id);
 }
