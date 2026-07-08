@@ -9,11 +9,18 @@ export default function StudentTable({ students, onEdit, onDelete, onView }) {
 
   return (
     <div className="table-responsive shadow-sm rounded bg-white">
-      <table className="table table-hover mb-0">
-        <thead className="table-light">
+      <table className="table table-hover mb-0 align-middle">
+        <thead className="table-dark">
           <tr>
+            <th>Student ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Year</th>
+            <th>Section</th>
+            <th>CGPA</th>
+            <th>Status</th>
             <th className="text-end">Actions</th>
           </tr>
         </thead>
@@ -21,8 +28,26 @@ export default function StudentTable({ students, onEdit, onDelete, onView }) {
         <tbody>
           {students.map((student) => (
             <tr key={student.id}>
+              <td>{student.studentId}</td>
               <td>{student.name}</td>
               <td>{student.email}</td>
+              <td>{student.phone}</td>
+              <td>{student.department}</td>
+              <td>{student.year}</td>
+              <td>{student.section}</td>
+              <td>{student.cgpa}</td>
+
+              <td>
+                <span
+                  className={`badge ${
+                    student.status === "Active"
+                      ? "bg-success"
+                      : "bg-danger"
+                  }`}
+                >
+                  {student.status}
+                </span>
+              </td>
 
               <td className="text-end">
                 <button

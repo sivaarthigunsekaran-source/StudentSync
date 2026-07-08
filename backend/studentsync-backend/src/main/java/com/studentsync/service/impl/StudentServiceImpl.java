@@ -3,7 +3,6 @@ package com.studentsync.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.studentsync.entity.Student;
@@ -19,28 +18,21 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
     }
 
-    // Generate Student ID automatically (STU001, STU002, ...)
-    private String generateStudentId() {
-
-        return studentRepository.findTopByOrderByIdDesc()
-                .map(student -> {
-
-                    String lastStudentId = student.getStudentId();
-
-                    if (lastStudentId == null || lastStudentId.isEmpty()) {
-                        return "STU001";
-                    }
-
-                    int number = Integer.parseInt(lastStudentId.substring(3));
-
-                    return String.format("STU%03d", number + 1);
-                })
-                .orElse("STU001");
+    // Get all students
+    @Override
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
-
+    // Get student by ID
     @Override
-    public Student saveStudent(@NonNull Student student) {
+    public Optional<Student> getStudentById(Long id) {
+        return studentRepository.findById(id);
+    }
+
+    // Add new student
+    @Override
+    public Student saveStudent(Student student) {
 
         if (student.getStudentId() == null || student.getStudentId().isBlank()) {
             student.setStudentId(generateStudentId());
@@ -49,50 +41,59 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(student);
     }
 
-
+    // Update student
     @Override
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public Student updateStudent(Long id, Student updatedStudent) {
+
+        return studentRepository.findById(id)
+                .map(student -> {
+
+                    student.setName(updatedStudent.getName());
+                    student.setEmail(updatedStudent.getEmail());
+
+                    return studentRepository.save(student);
+
+                })
+                .orElseThrow(() -> 
+                    new RuntimeException("Student not found with id: " + id)
+                );
     }
 
-
+    // Delete student
     @Override
-    public Optional<Student> getStudentById(@NonNull Long id) {
-        return studentRepository.findById(id);
-    }
-
-
-    @Override
-    public Student updateStudent(@NonNull Long id, @NonNull Student student) {
-
-        Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
-
-
-        existingStudent.setName(student.getName());
-        existingStudent.setEmail(student.getEmail());
-        existingStudent.setPhone(student.getPhone());
-        existingStudent.setDepartment(student.getDepartment());
-        existingStudent.setYear(student.getYear());
-        existingStudent.setSection(student.getSection());
-        existingStudent.setCgpa(student.getCgpa());
-        existingStudent.setStatus(student.getStatus());
-
-
-        return studentRepository.save(existingStudent);
-    }
-
-
-    @Override
-    public void deleteStudent(@NonNull Long id) {
+    public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
 
-
+    // Search students
     @Override
     public List<Student> searchStudents(String keyword) {
 
         return studentRepository
-                .findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword);
+                .findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                        keyword,
+                        keyword
+                );
+    }
+
+
+    // Generate Student ID automatically (SA01, SA02, SA03...)
+    private String generateStudentId() {
+
+        return studentRepository.findTopByOrderByStudentIdDesc()
+                .map(student -> {
+
+                    String lastStudentId = student.getStudentId();
+
+                    if (lastStudentId == null || lastStudentId.isBlank()) {
+                        return "SA01";
+                    }
+
+                    int number = Integer.parseInt(lastStudentId.substring(2));
+
+                    return String.format("SA%02d", number + 1);
+
+                })
+                .orElse("SA01");
     }
 }
