@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.studentsync.entity.Student;
@@ -33,7 +34,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody @Valid @NonNull Student student) {
+    public ResponseEntity<Student> createStudent(
+            @RequestBody @Valid @NonNull Student student) {
 
         // Debugging
         System.out.println("=================================");
@@ -43,7 +45,6 @@ public class StudentController {
         System.out.println("=================================");
 
         Student savedStudent = studentService.saveStudent(student);
-
         return ResponseEntity.ok(savedStudent);
     }
 
@@ -72,5 +73,12 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable @NonNull Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchStudents(
+            @RequestParam String keyword) {
+
+        return ResponseEntity.ok(studentService.searchStudents(keyword));
     }
 }

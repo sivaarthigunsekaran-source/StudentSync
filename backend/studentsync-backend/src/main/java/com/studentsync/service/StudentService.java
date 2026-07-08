@@ -18,4 +18,7 @@ public interface StudentService {
     Student updateStudent(@NonNull Long id, @NonNull Student student);
 
     void deleteStudent(@NonNull Long id);
+
+    // Search students by name or email
+    List<Student> searchStudents(String keyword);
 }
